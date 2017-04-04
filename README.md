@@ -8,10 +8,6 @@ It adds a menu entry under the `Window` menu > `Arrange Windows` (or `Arrange Wi
 
 Install via the GlyphsApp Plugin Manager and you’re ready to go.
 
-### Examples
-
--
-
 ##### Known Issues
 
 - None so far
