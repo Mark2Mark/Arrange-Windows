@@ -7,6 +7,7 @@ It adds a menu entry under the `Window` menu > `Arrange Windows` (or `Arrange Wi
 ### How to use
 
 Install via the GlyphsApp Plugin Manager and you’re ready to go.
+![Arrange Windows](https://raw.githubusercontent.com/Mark2Mark/ArrangeWindows/master/ArrangeWindows.gif?raw=true "Arrange Windows")
 
 ##### Known Issues
 
