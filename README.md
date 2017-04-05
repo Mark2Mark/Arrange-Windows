@@ -3,9 +3,10 @@
 This is a plugin for the [Glyphs font editor](http://glyphsapp.com/).
 
 It adds a menu entry under the `Window` menu > `Arrange Windows`
+
 **Options:**
- `Arrange Windows & Macro Panel` [Option key].
- `Arrange Windows On Screens` [Shift Key] if 2 Fonts and 2 Screens are present.
+- `Arrange Windows & Macro Panel` [Option key].
+- `Arrange Windows On Screens` [Shift Key] if 2 Fonts and 2 Screens are present.
 
 ### How to use
 
