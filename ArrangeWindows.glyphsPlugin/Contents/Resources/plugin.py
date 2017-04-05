@@ -58,14 +58,14 @@ class ArrangeWindows(GeneralPlugin):
 			newMenuItemAlt.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
 
 			# Alt 2
-			if screenCount > 1:
+			if screenCount == 2:
 				newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens)
 				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
 				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.			
 			
 			Glyphs.menu[targetMenu].append(newMenuItem)
 			Glyphs.menu[targetMenu].append(newMenuItemAlt)
-			if screenCount > 1:
+			if screenCount == 2:
 				Glyphs.menu[targetMenu].append(newMenuItemAltScreens)
 			
 
@@ -141,6 +141,8 @@ class ArrangeWindows(GeneralPlugin):
 
 			s2Rect = ((s2.origin.x, s2.origin.x), (s2.size.width, s2.size.height))
 			w2.setFrame_display_animate_(s2Rect, True, True)
+		else:
+			Message("You need exactly 2 fonts to be open.", "", OKButton="OK")
 
 	
 	def __file__(self):
