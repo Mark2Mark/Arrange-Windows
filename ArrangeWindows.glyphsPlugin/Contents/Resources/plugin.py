@@ -18,15 +18,28 @@
 
 
 from GlyphsApp.plugins import *
-from AppKit import NSScreen
+from AppKit import NSScreen, NSAnimationEaseIn, NSViewAnimationEndFrameKey
 import traceback
 
-Version = "1.0"
+version = "1.1"
+print version
+
+
+# class MFWindow(NSWindow):
+# 	def init(self):
+# 		return self
+# 	def animationResizeTime_(self, rect):
+# 		return 0.2
+
+screens = NSScreen.screens()
+screenCount = len(screens)
+
 
 class ArrangeWindows(GeneralPlugin):
 	def settings(self):
-		self.name = Glyphs.localize({'en': u'Arrange Windows', 'de': u'Arrange Windows'})
-		self.nameAlt = Glyphs.localize({'en': u'Arrange Windows & Macro Panel', 'de': u'Arrange Windows & Macro Panel'})
+		self.name = Glyphs.localize({'en': u'Arrange Windows', 'de': u'Verteile Fenster'})
+		self.nameAlt = Glyphs.localize({'en': u'Arrange Windows & Macro Panel', 'de': u'Verteile Fenster & Macro Panel'})
+		self.nameAltScreens = Glyphs.localize({'en': u'Arrange Windows On Screens', 'de': u'Verteile Fenster Auf Monitore'})
 	
 	def start(self):
 		try: 
@@ -39,12 +52,21 @@ class ArrangeWindows(GeneralPlugin):
 
 			newMenuItem = NSMenuItem(self.name, self.doArrangeWindows)
 
+			# Alt 1
 			newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows)
 			newMenuItemAlt.setKeyEquivalentModifierMask_(NSAlternateKeyMask)
 			newMenuItemAlt.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
+
+			# Alt 2
+			if screenCount > 1:
+				newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens)
+				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
+				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.			
 			
 			Glyphs.menu[targetMenu].append(newMenuItem)
 			Glyphs.menu[targetMenu].append(newMenuItemAlt)
+			if screenCount > 1:
+				Glyphs.menu[targetMenu].append(newMenuItemAltScreens)
 			
 
 		except:
@@ -56,6 +78,20 @@ class ArrangeWindows(GeneralPlugin):
 			# mainMenu.itemWithTag_(5).submenu().addItem_(newMenuItem)
 
 
+	def distribute(self, allWindows, screenWidth, screenHeight):
+		amount = len(allWindows)
+		for i, window in enumerate(allWindows):
+			share = screenWidth / amount-1
+			point = screenWidth / amount*(i)
+			
+			newRect = ((point, 0), (share, screenHeight))
+
+			# window = MFWindow.alloc().init() ## Subclass, dont do that!
+			#window.animationResizeTime_( newRect )
+			window.setFrame_display_animate_(newRect, True, True) #window.setFrameOrigin_((point, 0))
+			# window.animator().setAlphaValue_(0.0)
+
+			
 
 	
 	def doArrangeWindows(self, sender):
@@ -74,9 +110,11 @@ class ArrangeWindows(GeneralPlugin):
 			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow"]
 			Glyphs.showMacroWindow()
 		else:
-		 	allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
-		 	macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
-		 	macroWindow.close()
+			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
+			macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
+			macroWindow.close()
+			
+		self.distribute(allWindows, screenWidth, screenHeight)
 
 		### just for debugging:
 		# for x in Glyphs.windows():
@@ -86,11 +124,23 @@ class ArrangeWindows(GeneralPlugin):
 		# 		help(x)
 		#######################
 
-		amount = len(allWindows)
-		for i, x in enumerate(allWindows):
-			share = screenWidth / amount-1
-			point = screenWidth / amount*(i)
-			x.setFrame_display_animate_(((point, 0), (share, screenHeight)), True, True) #x.setFrameOrigin_((point, 0))
+
+
+	def doArrangeWindowsOnScreens(self, sender):
+		allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
+		macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
+
+		if screenCount == len(allWindows) == 2: # only limited to exactly 2
+			macroWindow.close()
+
+			w1, w2 = allWindows[0], allWindows[1]
+			s1, s2 = screens[0].frame(), screens[1].frame()
+			
+			s1Rect = ((s1.origin.x, s1.origin.x), (s1.size.width, s1.size.height))
+			w1.setFrame_display_animate_(s1Rect, True, True)
+
+			s2Rect = ((s2.origin.x, s2.origin.x), (s2.size.width, s2.size.height))
+			w2.setFrame_display_animate_(s2Rect, True, True)
 
 	
 	def __file__(self):
