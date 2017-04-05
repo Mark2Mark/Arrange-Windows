@@ -3,7 +3,8 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 
-#	- Run with Option Key to include the MacroPanel
+# - Run with Option Key to include the MacroPanel.
+# - Run with Shift Key to Arrange 2 Fonts to 2 Screens.
 #
 #
 # --> let me know if you have ideas for improving
