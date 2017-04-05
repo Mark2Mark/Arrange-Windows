@@ -82,6 +82,11 @@ class ArrangeWindows(GeneralPlugin):
 	def distribute(self, allWindows, screenWidth, screenHeight):
 		amount = len(allWindows)
 		for i, window in enumerate(allWindows):
+			
+			# Optional: deminiaturize:
+			# if window.isMiniaturized():
+			# 	window.deminiaturize_(True)
+
 			share = screenWidth / amount-1
 			point = screenWidth / amount*(i)
 			
@@ -91,6 +96,9 @@ class ArrangeWindows(GeneralPlugin):
 			#window.animationResizeTime_( newRect )
 			window.setFrame_display_animate_(newRect, True, True) #window.setFrameOrigin_((point, 0))
 			# window.animator().setAlphaValue_(0.0)
+
+
+
 
 			
 
