@@ -35,6 +35,7 @@ print version
 screens = NSScreen.screens()
 screenCount = len(screens)
 
+specialWindowName = "Live Drawer"
 
 class ArrangeWindows(GeneralPlugin):
 	def settings(self):
@@ -116,10 +117,12 @@ class ArrangeWindows(GeneralPlugin):
 			includeMacroPanel = True
 
 		if includeMacroPanel:
-			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow"]
+			#allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow"] # A: Without special window
+			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow" or specialWindowName in x.title() ] # B: With special window
 			Glyphs.showMacroWindow()
 		else:
-			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
+			#allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()] # A: Without special window
+			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or specialWindowName in x.title() ] # B: With special window
 			macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
 			macroWindow.close()
 			
