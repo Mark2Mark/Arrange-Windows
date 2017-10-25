@@ -35,7 +35,7 @@ print version
 screens = NSScreen.screens()
 screenCount = len(screens)
 
-specialWindowName = "Skedge"
+specialWindowName = "Skedge 1.2"
 
 class ArrangeWindows(GeneralPlugin):
 	def settings(self):
