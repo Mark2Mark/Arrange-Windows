@@ -35,7 +35,7 @@ print version
 screens = NSScreen.screens()
 screenCount = len(screens)
 
-specialWindowName = "Live Drawer"
+specialWindowName = "Skedge"
 
 class ArrangeWindows(GeneralPlugin):
 	def settings(self):
