@@ -17,7 +17,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+from GlyphsApp import *
 from GlyphsApp.plugins import *
 from AppKit import NSScreen, NSAnimationEaseIn, NSViewAnimationEndFrameKey
 import traceback
