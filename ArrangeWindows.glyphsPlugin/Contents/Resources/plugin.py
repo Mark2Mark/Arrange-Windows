@@ -17,13 +17,11 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+from GlyphsApp import *
 from GlyphsApp.plugins import *
 from AppKit import NSScreen, NSAnimationEaseIn, NSViewAnimationEndFrameKey
 import traceback
 
-version = "1.1"
-print version
 
 
 # class MFWindow(NSWindow):
