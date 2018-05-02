@@ -37,9 +37,9 @@ specialWindowName = "Skedge"
 
 class ArrangeWindows(GeneralPlugin):
 	def settings(self):
-		self.name = Glyphs.localize({'en': u'Arrange Windows', 'de': u'Verteile Fenster'})
+		self.name = Glyphs.localize({'en': u'Arrange Windows', 'de': u'Verteile Fenster', 'ko': u'창 정렬'})
 		self.nameAlt = Glyphs.localize({'en': u'Arrange Windows & Macro Panel', 'de': u'Verteile Fenster & Macro Panel'})
-		self.nameAltScreens = Glyphs.localize({'en': u'Arrange Windows On Screens', 'de': u'Verteile Fenster Auf Monitore'})
+		self.nameAltScreens = Glyphs.localize({'en': u'Arrange Windows on Screens', 'de': u'Verteile Fenster auf Monitore'})
 	
 	def start(self):
 		try: 
