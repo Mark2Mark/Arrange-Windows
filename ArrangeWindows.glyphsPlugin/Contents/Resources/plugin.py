@@ -17,6 +17,8 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+from __future__ import print_function
+
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 from AppKit import NSScreen, NSAnimationEaseIn, NSViewAnimationEndFrameKey
@@ -50,16 +52,16 @@ class ArrangeWindows(GeneralPlugin):
 			separator = NSMenuItem.separatorItem()
 			Glyphs.menu[targetMenu].append(separator)
 
-			newMenuItem = NSMenuItem(self.name, self.doArrangeWindows)
+			newMenuItem = NSMenuItem(self.name, self.doArrangeWindows_)
 
 			# Alt 1
-			newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows)
+			newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows_)
 			newMenuItemAlt.setKeyEquivalentModifierMask_(NSAlternateKeyMask)
 			newMenuItemAlt.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
 
 			# Alt 2
 			if screenCount == 2:
-				newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens)
+				newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
 				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
 				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.			
 			
@@ -70,14 +72,14 @@ class ArrangeWindows(GeneralPlugin):
 			
 
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 			# mainMenu = Glyphs.mainMenu()
 			# s = objc.selector(self.doArrangeWindows,signature='v@:@')
 			# newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.name, s, "")
 			# newMenuItem.setTarget_(self)
 			# mainMenu.itemWithTag_(5).submenu().addItem_(newMenuItem)
 
-
+	@objc.python_method
 	def distribute(self, allWindows, screenWidth, screenHeight):
 		amount = len(allWindows)
 		for i, window in enumerate(allWindows):
@@ -98,11 +100,7 @@ class ArrangeWindows(GeneralPlugin):
 
 
 
-
-			
-
-	
-	def doArrangeWindows(self, sender):
+	def doArrangeWindows_(self, sender):
 
 		screenHeight = NSScreen.mainScreen().frame().size.height
 		screenWidth = NSScreen.mainScreen().frame().size.width
@@ -136,7 +134,7 @@ class ArrangeWindows(GeneralPlugin):
 
 
 
-	def doArrangeWindowsOnScreens(self, sender):
+	def doArrangeWindowsOnScreens_(self, sender):
 		allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
 		macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
 
