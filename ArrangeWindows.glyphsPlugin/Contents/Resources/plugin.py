@@ -1,11 +1,11 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 
 # - Run with Option Key to include the MacroPanel.
 # - Run with Shift Key to Arrange 2 Fonts to 2 Screens.
-#
 #
 # --> let me know if you have ideas for improving
 # --> Mark Froemberg aka Mark2Mark @ GitHub
@@ -17,14 +17,11 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-from __future__ import print_function
 
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 from AppKit import NSScreen, NSAnimationEaseIn, NSViewAnimationEndFrameKey
 import traceback
-
-
 
 # class MFWindow(NSWindow):
 # 	def init(self):
@@ -34,15 +31,32 @@ import traceback
 
 screens = NSScreen.screens()
 screenCount = len(screens)
-
 specialWindowName = "Skedge"
 
 class ArrangeWindows(GeneralPlugin):
-	def settings(self):
-		self.name = Glyphs.localize({'en': u'Arrange Windows', 'de': u'Verteile Fenster'})
-		self.nameAlt = Glyphs.localize({'en': u'Arrange Windows & Macro Panel', 'de': u'Verteile Fenster & Macro Panel'})
-		self.nameAltScreens = Glyphs.localize({'en': u'Arrange Windows On Screens', 'de': u'Verteile Fenster Auf Monitore'})
 	
+	@objc.python_method
+	def settings(self):
+		self.name = Glyphs.localize({
+			'en': 'Arrange Windows',
+			'de': 'Fenster anordnen',
+			'fr': 'Organiser les fenêtres',
+			'es': 'Organizar ventanas',
+		})
+		self.nameAlt = Glyphs.localize({
+			'en': 'Arrange Windows & Macro Panel',
+			'de': 'Fenster & Macro Panel anordnen',
+			'fr': 'Organiser les fenêtres et le panneau des macros',
+			'es': 'Organizar ventanas y el panel de macros',
+		})
+		self.nameAltScreens = Glyphs.localize({
+			'en': 'Arrange Windows Across Screens',
+			'de': 'Verteile Fenster auf Monitore',
+			'fr': 'Organiser les fenêtres à travers les écrans',
+			'es': 'Organizar ventanas en pantallas',
+		})
+	
+	@objc.python_method
 	def start(self):
 		try: 
 			# new API in Glyphs 2.3.1-910
@@ -63,13 +77,12 @@ class ArrangeWindows(GeneralPlugin):
 			if screenCount == 2:
 				newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
 				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
-				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.			
+				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
 			
 			Glyphs.menu[targetMenu].append(newMenuItem)
 			Glyphs.menu[targetMenu].append(newMenuItemAlt)
 			if screenCount == 2:
 				Glyphs.menu[targetMenu].append(newMenuItemAltScreens)
-			
 
 		except:
 			print(traceback.format_exc())
@@ -90,7 +103,6 @@ class ArrangeWindows(GeneralPlugin):
 
 			share = screenWidth / amount-1
 			point = screenWidth / amount*(i)
-			
 			newRect = ((point, 0), (share, screenHeight))
 
 			# window = MFWindow.alloc().init() ## Subclass, dont do that!
@@ -98,10 +110,7 @@ class ArrangeWindows(GeneralPlugin):
 			window.setFrame_display_animate_(newRect, True, True) #window.setFrameOrigin_((point, 0))
 			# window.animator().setAlphaValue_(0.0)
 
-
-
 	def doArrangeWindows_(self, sender):
-
 		screenHeight = NSScreen.mainScreen().frame().size.height
 		screenWidth = NSScreen.mainScreen().frame().size.width
 
@@ -133,7 +142,6 @@ class ArrangeWindows(GeneralPlugin):
 		#######################
 
 
-
 	def doArrangeWindowsOnScreens_(self, sender):
 		allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
 		macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
@@ -150,9 +158,23 @@ class ArrangeWindows(GeneralPlugin):
 			s2Rect = ((s2.origin.x, s2.origin.x), (s2.size.width, s2.size.height))
 			w2.setFrame_display_animate_(s2Rect, True, True)
 		else:
-			Message("You need exactly 2 fonts to be open.", "", OKButton="OK")
+			Message(
+				title = Glyphs.localize({
+					'en': "Wrong Number of Fonts",
+					'de': 'Falsche Anzahl Schriften',
+					'fr': 'Nombre des polices incorrecte',
+					'es': 'Numero de fuentes incorrecto',
+					}),
+				message = Glyphs.localize({
+					'en': "You need exactly two fonts to be open.",
+					'de': 'Es müssen genau zwei Schriftdateien geöffnet sein.',
+					'fr': 'Il faut que exactement deux fichiers .glyphs sont ouverts.',
+					'es': 'Exactamente dos archivos de fuentes deben estar abiertos.',
+					}),
+				OKButton = "OK",
+				)
 
-	
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
