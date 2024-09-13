@@ -65,17 +65,24 @@ class ArrangeWindows(GeneralPlugin):
 			## Without the separator, it overwrites the `Kerning` menu entry, if put in WINDOW_MENU
 			separator = NSMenuItem.separatorItem()
 			Glyphs.menu[targetMenu].append(separator)
-
-			newMenuItem = NSMenuItem(self.name, self.doArrangeWindows_)
-
+			if Glyphs.versionNumber >= 3.3:
+				newMenuItem = NSMenuItem(self.name, callback=self.doArrangeWindows_, target=self)
+			else:
+				newMenuItem = NSMenuItem(self.name, self.doArrangeWindows_)
 			# Alt 1
-			newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows_)
+			if Glyphs.versionNumber >= 3.3:
+				newMenuItemAlt = NSMenuItem(self.nameAlt, callback=self.doArrangeWindows_, target=self)
+			else:
+				newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows_)
 			newMenuItemAlt.setKeyEquivalentModifierMask_(NSAlternateKeyMask)
 			newMenuItemAlt.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
 
 			# Alt 2
 			if screenCount == 2:
-				newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
+				if Glyphs.versionNumber >= 3.3:
+					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, callback=self.doArrangeWindowsOnScreens_, target=self)
+				else:
+					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
 				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
 				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
 			
