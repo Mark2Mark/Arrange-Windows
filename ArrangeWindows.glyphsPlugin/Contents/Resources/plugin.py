@@ -18,9 +18,10 @@ from __future__ import division, print_function, unicode_literals
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-from GlyphsApp import *
-from GlyphsApp.plugins import *
-from AppKit import NSScreen, NSAnimationEaseIn, NSViewAnimationEndFrameKey
+import objc
+from GlyphsApp import Glyphs, Message, WINDOW_MENU, NSMenuItem
+from GlyphsApp.plugins import GeneralPlugin
+from AppKit import NSScreen, NSEvent, NSAlternateKeyMask, NSShiftKeyMask
 import traceback
 
 # class MFWindow(NSWindow):
@@ -33,8 +34,9 @@ screens = NSScreen.screens()
 screenCount = len(screens)
 specialWindowName = "Skedge"
 
+
 class ArrangeWindows(GeneralPlugin):
-	
+
 	@objc.python_method
 	def settings(self):
 		self.name = Glyphs.localize({
@@ -55,12 +57,12 @@ class ArrangeWindows(GeneralPlugin):
 			'fr': 'Organiser les fenêtres à travers les écrans',
 			'es': 'Organizar ventanas en pantallas',
 		})
-	
+
 	@objc.python_method
 	def start(self):
-		try: 
+		try:
 			# new API in Glyphs 2.3.1-910
-			targetMenu = WINDOW_MENU # EDIT_MENU # SCRIPT_MENU
+			targetMenu = WINDOW_MENU  # EDIT_MENU # SCRIPT_MENU
 
 			## Without the separator, it overwrites the `Kerning` menu entry, if put in WINDOW_MENU
 			separator = NSMenuItem.separatorItem()
@@ -75,7 +77,7 @@ class ArrangeWindows(GeneralPlugin):
 			else:
 				newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows_)
 			newMenuItemAlt.setKeyEquivalentModifierMask_(NSAlternateKeyMask)
-			newMenuItemAlt.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
+			newMenuItemAlt.setAlternate_(True)  # A Boolean value that marks the menu item as an alternate to the previous menu item.
 
 			# Alt 2
 			if screenCount == 2:
@@ -84,8 +86,8 @@ class ArrangeWindows(GeneralPlugin):
 				else:
 					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
 				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
-				newMenuItemAltScreens.setAlternate_(True) # A Boolean value that marks the menu item as an alternate to the previous menu item.
-			
+				newMenuItemAltScreens.setAlternate_(True)  # A Boolean value that marks the menu item as an alternate to the previous menu item.
+
 			Glyphs.menu[targetMenu].append(newMenuItem)
 			Glyphs.menu[targetMenu].append(newMenuItemAlt)
 			if screenCount == 2:
@@ -103,18 +105,18 @@ class ArrangeWindows(GeneralPlugin):
 	def distribute(self, allWindows, screenWidth, screenHeight):
 		amount = len(allWindows)
 		for i, window in enumerate(allWindows):
-			
+
 			# Optional: deminiaturize:
 			# if window.isMiniaturized():
 			# 	window.deminiaturize_(True)
 
-			share = screenWidth / amount-1
-			point = screenWidth / amount*(i)
+			share = screenWidth / amount - 1
+			point = screenWidth / amount * i
 			newRect = ((point, 0), (share, screenHeight))
 
 			# window = MFWindow.alloc().init() ## Subclass, dont do that!
-			#window.animationResizeTime_( newRect )
-			window.setFrame_display_animate_(newRect, True, True) #window.setFrameOrigin_((point, 0))
+			# window.animationResizeTime_(newRect)
+			window.setFrame_display_animate_(newRect, True, True)  # window.setFrameOrigin_((point, 0))
 			# window.animator().setAlphaValue_(0.0)
 
 	def doArrangeWindows_(self, sender):
@@ -129,15 +131,15 @@ class ArrangeWindows(GeneralPlugin):
 			includeMacroPanel = True
 
 		if includeMacroPanel:
-			#allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow"] # A: Without special window
-			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow" or specialWindowName in x.title() ] # B: With special window
+			# allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow"]  # A: Without special window
+			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or x.class__().__name__ == "GSMacroWindow" or specialWindowName in x.title()]  # B: With special window
 			Glyphs.showMacroWindow()
 		else:
-			#allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()] # A: Without special window
-			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or specialWindowName in x.title() ] # B: With special window
+			# allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]  # A: Without special window
+			allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document() or specialWindowName in x.title()]  # B: With special window
 			macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
 			macroWindow.close()
-			
+
 		self.distribute(allWindows, screenWidth, screenHeight)
 
 		### just for debugging:
@@ -148,17 +150,16 @@ class ArrangeWindows(GeneralPlugin):
 		# 		help(x)
 		#######################
 
-
 	def doArrangeWindowsOnScreens_(self, sender):
 		allWindows = [x for x in Glyphs.windows() if x.class__().__name__ == "GSWindow" and x.document()]
 		macroWindow = [x for x in Glyphs.windows() if x.class__().__name__ == "GSMacroWindow"][0]
 
-		if screenCount == len(allWindows) == 2: # only limited to exactly 2
+		if screenCount == len(allWindows) == 2:  # only limited to exactly 2
 			macroWindow.close()
 
 			w1, w2 = allWindows[0], allWindows[1]
 			s1, s2 = screens[0].frame(), screens[1].frame()
-			
+
 			s1Rect = ((s1.origin.x, s1.origin.x), (s1.size.width, s1.size.height))
 			w1.setFrame_display_animate_(s1Rect, True, True)
 
@@ -166,20 +167,20 @@ class ArrangeWindows(GeneralPlugin):
 			w2.setFrame_display_animate_(s2Rect, True, True)
 		else:
 			Message(
-				title = Glyphs.localize({
+				title=Glyphs.localize({
 					'en': "Wrong Number of Fonts",
 					'de': 'Falsche Anzahl Schriften',
 					'fr': 'Nombre des polices incorrecte',
 					'es': 'Numero de fuentes incorrecto',
-					}),
-				message = Glyphs.localize({
+				}),
+				message=Glyphs.localize({
 					'en': "You need exactly two fonts to be open.",
 					'de': 'Es müssen genau zwei Schriftdateien geöffnet sein.',
 					'fr': 'Il faut que exactement deux fichiers .glyphs sont ouverts.',
 					'es': 'Exactamente dos archivos de fuentes deben estar abiertos.',
-					}),
-				OKButton = "OK",
-				)
+				}),
+				OKButton="OK",
+			)
 
 	@objc.python_method
 	def __file__(self):
