@@ -3,7 +3,7 @@ from __future__ import division, print_function, unicode_literals
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
+#
 # - Run with Option Key to include the MacroPanel.
 # - Run with Shift Key to Arrange 2 Fonts to 2 Screens.
 #
@@ -67,12 +67,17 @@ class ArrangeWindows(GeneralPlugin):
 			## Without the separator, it overwrites the `Kerning` menu entry, if put in WINDOW_MENU
 			separator = NSMenuItem.separatorItem()
 			Glyphs.menu[targetMenu].append(separator)
-			if Glyphs.versionNumber >= 3.3:
+			if Glyphs.buildNumber >= 3320:
+				from GlyphsApp.UI import MenuItem
+				newMenuItem = MenuItem(self.name, action=self.doArrangeWindows_, target=self)
+			elif Glyphs.versionNumber >= 3.3:
 				newMenuItem = NSMenuItem(self.name, callback=self.doArrangeWindows_, target=self)
 			else:
 				newMenuItem = NSMenuItem(self.name, self.doArrangeWindows_)
 			# Alt 1
-			if Glyphs.versionNumber >= 3.3:
+			if Glyphs.buildNumber >= 3320:
+				newMenuItem = MenuItem(self.nameAlt, action=self.doArrangeWindows_, target=self)
+			elif Glyphs.versionNumber >= 3.3:
 				newMenuItemAlt = NSMenuItem(self.nameAlt, callback=self.doArrangeWindows_, target=self)
 			else:
 				newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows_)
@@ -81,7 +86,9 @@ class ArrangeWindows(GeneralPlugin):
 
 			# Alt 2
 			if screenCount == 2:
-				if Glyphs.versionNumber >= 3.3:
+				if Glyphs.buildNumber >= 3320:
+					newMenuItem = MenuItem(self.nameAltScreens, action=self.doArrangeWindowsOnScreens_, target=self)
+				elif Glyphs.versionNumber >= 3.3:
 					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, callback=self.doArrangeWindowsOnScreens_, target=self)
 				else:
 					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
