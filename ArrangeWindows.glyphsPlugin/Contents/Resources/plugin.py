@@ -76,7 +76,7 @@ class ArrangeWindows(GeneralPlugin):
 				newMenuItem = NSMenuItem(self.name, self.doArrangeWindows_)
 			# Alt 1
 			if Glyphs.buildNumber >= 3320:
-				newMenuItem = MenuItem(self.nameAlt, action=self.doArrangeWindows_, target=self)
+				newMenuItemAlt = MenuItem(self.nameAlt, action=self.doArrangeWindows_, target=self)
 			elif Glyphs.versionNumber >= 3.3:
 				newMenuItemAlt = NSMenuItem(self.nameAlt, callback=self.doArrangeWindows_, target=self)
 			else:
@@ -87,7 +87,7 @@ class ArrangeWindows(GeneralPlugin):
 			# Alt 2
 			if screenCount == 2:
 				if Glyphs.buildNumber >= 3320:
-					newMenuItem = MenuItem(self.nameAltScreens, action=self.doArrangeWindowsOnScreens_, target=self)
+					newMenuItemAltScreens = MenuItem(self.nameAltScreens, action=self.doArrangeWindowsOnScreens_, target=self)
 				elif Glyphs.versionNumber >= 3.3:
 					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, callback=self.doArrangeWindowsOnScreens_, target=self)
 				else:
