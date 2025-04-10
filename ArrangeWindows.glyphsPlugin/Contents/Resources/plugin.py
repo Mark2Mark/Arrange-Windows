@@ -70,43 +70,34 @@ class ArrangeWindows(GeneralPlugin):
 			if Glyphs.buildNumber >= 3320:
 				from GlyphsApp.UI import MenuItem
 				newMenuItem = MenuItem(self.name, action=self.doArrangeWindows_, target=self)
-			elif Glyphs.versionNumber >= 3.3:
-				newMenuItem = NSMenuItem(self.name, callback=self.doArrangeWindows_, target=self)
-			else:
-				newMenuItem = NSMenuItem(self.name, self.doArrangeWindows_)
-			# Alt 1
-			if Glyphs.buildNumber >= 3320:
 				newMenuItemAlt = MenuItem(self.nameAlt, action=self.doArrangeWindows_, target=self)
-			elif Glyphs.versionNumber >= 3.3:
-				newMenuItemAlt = NSMenuItem(self.nameAlt, callback=self.doArrangeWindows_, target=self)
 			else:
-				newMenuItemAlt = NSMenuItem(self.nameAlt, self.doArrangeWindows_)
+				newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.name, self.doArrangeWindows_, "")
+				newMenuItem.setTarget_(self)
+				newMenuItemAlt = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.nameAlt, self.doArrangeWindows_, "")
+				newMenuItemAlt.setTarget_(self)
+
 			newMenuItemAlt.setKeyEquivalentModifierMask_(NSAlternateKeyMask)
 			newMenuItemAlt.setAlternate_(True)  # A Boolean value that marks the menu item as an alternate to the previous menu item.
+
+			Glyphs.menu[targetMenu].append(newMenuItem)
+			Glyphs.menu[targetMenu].append(newMenuItemAlt)
 
 			# Alt 2
 			if screenCount == 2:
 				if Glyphs.buildNumber >= 3320:
 					newMenuItemAltScreens = MenuItem(self.nameAltScreens, action=self.doArrangeWindowsOnScreens_, target=self)
-				elif Glyphs.versionNumber >= 3.3:
-					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, callback=self.doArrangeWindowsOnScreens_, target=self)
 				else:
-					newMenuItemAltScreens = NSMenuItem(self.nameAltScreens, self.doArrangeWindowsOnScreens_)
+					newMenuItemAltScreens = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.nameAltScreens, self.doArrangeWindowsOnScreens_, "")
+					newMenuItemAltScreens.setTarget_(self)
+
 				newMenuItemAltScreens.setKeyEquivalentModifierMask_(NSShiftKeyMask)
 				newMenuItemAltScreens.setAlternate_(True)  # A Boolean value that marks the menu item as an alternate to the previous menu item.
 
-			Glyphs.menu[targetMenu].append(newMenuItem)
-			Glyphs.menu[targetMenu].append(newMenuItemAlt)
-			if screenCount == 2:
 				Glyphs.menu[targetMenu].append(newMenuItemAltScreens)
 
 		except:
 			print(traceback.format_exc())
-			# mainMenu = Glyphs.mainMenu()
-			# s = objc.selector(self.doArrangeWindows,signature='v@:@')
-			# newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.name, s, "")
-			# newMenuItem.setTarget_(self)
-			# mainMenu.itemWithTag_(5).submenu().addItem_(newMenuItem)
 
 	@objc.python_method
 	def distribute(self, allWindows, screenWidth, screenHeight):
